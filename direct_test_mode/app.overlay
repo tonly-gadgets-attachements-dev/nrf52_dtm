@@ -27,3 +27,20 @@
         crx-gpios = <&gpio0 17 GPIO_ACTIVE_HIGH>;
     };
 };
+
+/ {
+    /delete-node/ aliases;
+};
+/ {
+    leds {
+        /delete-node/ led_0;
+        /delete-node/ led_1;
+        /delete-node/ led_2;
+        /delete-node/ led_3;
+        pa_switch: pa_switch0 {
+            gpios = <&gpio0 4 GPIO_ACTIVE_HIGH>;
+            label = "Green LED 4";
+        };
+    };
+};
+

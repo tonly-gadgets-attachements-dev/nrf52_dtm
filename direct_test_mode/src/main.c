@@ -7,13 +7,16 @@
 #include <errno.h>
 #include <zephyr/drivers/uart.h>
 #include <zephyr/kernel.h>
+#include <zephyr/drivers/gpio.h>
 
 #include "dtm.h"
+#define PA_POWER_NODE DT_NODELABEL(pa_switch)
 
 void main(void)
 {
 	int err;
 	const struct device *uart = DEVICE_DT_GET(DT_NODELABEL(uart0));
+    static const struct gpio_dt_spec pa_power = GPIO_DT_SPEC_GET(PA_POWER_NODE, gpios);
 	bool is_msb_read = false;
 	uint8_t rx_byte;
 	uint16_t dtm_cmd;
@@ -21,6 +24,12 @@ void main(void)
 	int64_t msb_time;
 
 	printk("Starting Direct Test Mode example\n");
+
+    err = gpio_pin_configure_dt(&pa_power, GPIO_OUTPUT_ACTIVE);
+	if (err < 0) {
+		printk("PA Power Pin not ready\n");
+	}
+    gpio_pin_set_dt(&pa_power, 1);
 
 	if (!device_is_ready(uart)) {
 		printk("UART device not ready\n");
